@@ -4,7 +4,7 @@ db.createCollection("estudiantes", {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["codigo", "nombre", "email", "programa"],
+        required: ["codigo", "nombre", "email", "programa", "fecha_nacimiento", "documento"],
         properties: {
           codigo: {
             bsonType: "string",
@@ -32,9 +32,24 @@ db.createCollection("estudiantes", {
             bsonType: "double",
             minimum: 0.0,
             maximum: 5.0
+          },
+          estado: {
+            bsonType: "string",
+            enum: ["Activo", "Inactivo", "Graduado", "Retirado"],
+            description: "Estado del estudiante (Activo, Inactivo, Graduado, Retirado)"
+          },
+          fecha_nacimiento: {
+            bsonType: "date",
+            description: "Fecha de nacimiento del estudiante"
+          },
+          documento: {
+            bsonType: "string",
+            pattern: "^[0-9]{6,10}$",
+            description: "Documento de identidad colombiano (cédula, solo números, 6 a 10 dígitos) - requerido"
           }
         }
-      }
+      },
+      $expr: { $lt: ["$fecha_nacimiento", "$$NOW"] }
     }
 });
 
@@ -105,7 +120,8 @@ db.createCollection("materias", {
                 creditos: {
                     bsonType: "int",
                     minimum: 1,
-                    description: "Cantidad de créditos de la materia - requerido"
+                    maximum: 10,
+                    description: "Cantidad de créditos de la materia - requerido (mínimo 1, máximo 10)"
                 },
                 prerrequisitos: {
                     bsonType: "array",
@@ -188,6 +204,7 @@ db.createCollection("inscripciones", {
                     description: "Estado de la inscripción (activa, retirada, aprobada)"
                 }
             }
-        }
+        },
+        $expr: { $lte: ["$fecha_inscripcion", "$$NOW"] }
     }
 })
