@@ -20,7 +20,7 @@ db.createCollection("estudiantes", {
             description: "Email institucional válido"
           },
           programa: {
-            bsonType: "objectId",
+            bsonType: "string",
             description: "ID del programa académico - requerido"
           },
           semestre_actual: {
@@ -59,7 +59,7 @@ db.createCollection("profesores", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["codigo", "nombre", "email", "especialidades", "materias"],
+            required: ["codigo", "nombre", "email", "especialidades", "materias", "documento"],
             properties: {
                 codigo: {
                     bsonType: "string",
@@ -84,10 +84,15 @@ db.createCollection("profesores", {
                 materias: {
                     bsonType: "array",
                     items: {
-                        bsonType: "objectId"
+                        bsonType: "string"
                     },
                     description: "Materias asignadas (referencia a materias)"
-                }
+                },
+                documento: {
+                    bsonType: "string",
+                    pattern: "^[0-9]{6,10}$",
+                    description: "Documento de identidad colombiano (cédula, solo números, 6 a 10 dígitos) - requerido"
+                },
             }
         }
     }
@@ -114,7 +119,7 @@ db.createCollection("materias", {
                     description: "Descripción de la materia - requerido"
                 },
                 profesor: {
-                    bsonType: "objectId",
+                    bsonType: "string",
                     description: "ID del profesor asignado - requerido"
                 },
                 creditos: {
@@ -126,7 +131,7 @@ db.createCollection("materias", {
                 prerrequisitos: {
                     bsonType: "array",
                     items: {
-                        bsonType: "objectId"
+                        bsonType: "string"
                     },
                     description: "Lista de materias que son prerrequisito (referencia a materias)"
                 }
@@ -158,7 +163,7 @@ db.createCollection("programas", {
                 plan_estudio: {
                     bsonType: "array",
                     items: {
-                        bsonType: "objectId"
+                        bsonType: "string"
                     },
                     description: "Materias del plan de estudio (referencia a materias)"
                 },
@@ -183,11 +188,11 @@ db.createCollection("inscripciones", {
             required: ["estudiante", "materia", "periodo", "fecha_inscripcion"],
             properties: {
                 estudiante: {
-                    bsonType: "objectId",
+                    bsonType: "string",
                     description: "ID del estudiante inscrito - requerido"
                 },
                 materia: {
-                    bsonType: "objectId",
+                    bsonType: "string",
                     description: "ID de la materia inscrita - requerido"
                 },
                 periodo: {
@@ -200,9 +205,15 @@ db.createCollection("inscripciones", {
                 },
                 estado: {
                     bsonType: "string",
-                    enum: ["activa", "retirada", "aprobada"],
+                    enum: ["activa", "retirada", "aprobada", "finalizada"],
                     description: "Estado de la inscripción (activa, retirada, aprobada)"
-                }
+                },
+                nota: {
+                    bsonType: "double",
+                    minimum: 0.0,
+                    maximum: 5.0,
+                    description: "Nota del estudiante en esa materia"
+                },
             }
         },
         $expr: { $lte: ["$fecha_inscripcion", "$$NOW"] }

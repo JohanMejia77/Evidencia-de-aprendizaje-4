@@ -48,26 +48,26 @@ db.materias.insertMany([
 
 // Insertar profesores
 db.profesores.insertMany([
-  { codigo: "P001", nombre: "María Gómez", email: "mgomez@universidad.edu.co", especialidades: ["Matemáticas"], materias: ["MAT101", "MAT201", "MAT301"] },
-  { codigo: "P002", nombre: "Carlos Pérez", email: "cperez@universidad.edu.co", especialidades: ["Programación"], materias: ["PROG101", "PROG201", "PROG301", "PROG401"] },
-  { codigo: "P003", nombre: "Ana Torres", email: "atorres@universidad.edu.co", especialidades: ["Administración"], materias: ["ADM101", "ADM201", "ADM301"] },
-  { codigo: "P004", nombre: "Luis Martínez", email: "lmartinez@universidad.edu.co", especialidades: ["Derecho"], materias: ["DER101", "DER201", "DER301"] },
-  { codigo: "P005", nombre: "Sofía Ramírez", email: "sramirez@universidad.edu.co", especialidades: ["Psicología"], materias: ["PSI101", "PSI201", "PSI301"] },
-  { codigo: "P006", nombre: "Jorge Herrera", email: "jherrera@universidad.edu.co", especialidades: ["Medicina"], materias: ["MED101", "MED201", "MED301"] },
-  { codigo: "P007", nombre: "Paula Díaz", email: "pdiaz@universidad.edu.co", especialidades: ["Estadística"], materias: ["MAT401"] },
-  { codigo: "P008", nombre: "Ricardo López", email: "rlopez@universidad.edu.co", especialidades: ["Ingeniería de Software"], materias: ["PROG401"] },
-  { codigo: "P009", nombre: "Laura Castro", email: "lcastro@universidad.edu.co", especialidades: ["Contabilidad"], materias: ["ADM201"] },
-  { codigo: "P010", nombre: "Miguel Ruiz", email: "mruiz@universidad.edu.co", especialidades: ["Talento Humano"], materias: ["ADM301"] },
-  { codigo: "P011", nombre: "Andrea Silva", email: "asilva@universidad.edu.co", especialidades: ["Psicología Clínica"], materias: ["PSI301"] },
-  { codigo: "P012", nombre: "Juan Cárdenas", email: "jcardenas@universidad.edu.co", especialidades: ["Derecho Penal"], materias: ["DER301"] },
-  { codigo: "P013", nombre: "Camila Vargas", email: "cvargas@universidad.edu.co", especialidades: ["Biología"], materias: ["MED101"] },
-  { codigo: "P014", nombre: "Esteban Ríos", email: "erios@universidad.edu.co", especialidades: ["Fisiología"], materias: ["MED301"] },
-  { codigo: "P015", nombre: "Valentina Mora", email: "vmora@universidad.edu.co", especialidades: ["Desarrollo Humano"], materias: ["PSI201"] },
-  { codigo: "P016", nombre: "David Romero", email: "dromero@universidad.edu.co", especialidades: ["Penal"], materias: ["DER301"] },
-  { codigo: "P017", nombre: "Natalia Peña", email: "npena@universidad.edu.co", especialidades: ["Psicopatología"], materias: ["PSI301"] },
-  { codigo: "P018", nombre: "Sebastián Gil", email: "sgil@universidad.edu.co", especialidades: ["Álgebra"], materias: ["MAT201"] },
-  { codigo: "P019", nombre: "Juliana Acosta", email: "jacosta@universidad.edu.co", especialidades: ["Bases de Datos"], materias: ["PROG301"] },
-  { codigo: "P020", nombre: "Tomás Salazar", email: "tsalazar@universidad.edu.co", especialidades: ["Cálculo"], materias: ["MAT301"] }
+  { codigo: "P001", documento: "2001234567", nombre: "María Gómez", email: "mgomez@universidad.edu.co", especialidades: ["Matemáticas"], materias: ["MAT101", "MAT201", "MAT301"] },
+  { codigo: "P002", documento: "2002345678", nombre: "Carlos Pérez", email: "cperez@universidad.edu.co", especialidades: ["Programación"], materias: ["PROG101", "PROG201", "PROG301", "PROG401"] },
+  { codigo: "P003", documento: "2003456789", nombre: "Ana Torres", email: "atorres@universidad.edu.co", especialidades: ["Administración"], materias: ["ADM101", "ADM201", "ADM301"] },
+  { codigo: "P004", documento: "2004567890", nombre: "Luis Martínez", email: "lmartinez@universidad.edu.co", especialidades: ["Derecho"], materias: ["DER101", "DER201", "DER301"] },
+  { codigo: "P005", documento: "2005678901", nombre: "Sofía Ramírez", email: "sramirez@universidad.edu.co", especialidades: ["Psicología"], materias: ["PSI101", "PSI201", "PSI301"] },
+  { codigo: "P006", documento: "2006789012", nombre: "Jorge Herrera", email: "jherrera@universidad.edu.co", especialidades: ["Medicina"], materias: ["MED101", "MED201", "MED301"] },
+  { codigo: "P007", documento: "2007890123", nombre: "Paula Díaz", email: "pdiaz@universidad.edu.co", especialidades: ["Estadística"], materias: ["MAT401"] },
+  { codigo: "P008", documento: "2008901234", nombre: "Ricardo López", email: "rlopez@universidad.edu.co", especialidades: ["Ingeniería de Software"], materias: ["PROG401"] },
+  { codigo: "P009", documento: "2009012345", nombre: "Laura Castro", email: "lcastro@universidad.edu.co", especialidades: ["Contabilidad"], materias: ["ADM201"] },
+  { codigo: "P010", documento: "2010123456", nombre: "Miguel Ruiz", email: "mruiz@universidad.edu.co", especialidades: ["Talento Humano"], materias: ["ADM301"] },
+  { codigo: "P011", documento: "2011234567", nombre: "Andrea Silva", email: "asilva@universidad.edu.co", especialidades: ["Psicología Clínica"], materias: ["PSI301"] },
+  { codigo: "P012", documento: "2012345678", nombre: "Juan Cárdenas", email: "jcardenas@universidad.edu.co", especialidades: ["Derecho Penal"], materias: ["DER301"] },
+  { codigo: "P013", documento: "2013456789", nombre: "Camila Vargas", email: "cvargas@universidad.edu.co", especialidades: ["Biología"], materias: ["MED101"] },
+  { codigo: "P014", documento: "2014567890", nombre: "Esteban Ríos", email: "erios@universidad.edu.co", especialidades: ["Fisiología"], materias: ["MED301"] },
+  { codigo: "P015", documento: "2015678901", nombre: "Valentina Mora", email: "vmora@universidad.edu.co", especialidades: ["Desarrollo Humano"], materias: ["PSI201"] },
+  { codigo: "P016", documento: "2016789012", nombre: "David Romero", email: "dromero@universidad.edu.co", especialidades: ["Penal"], materias: ["DER301"] },
+  { codigo: "P017", documento: "2017890123", nombre: "Natalia Peña", email: "npena@universidad.edu.co", especialidades: ["Psicopatología"], materias: ["PSI301"] },
+  { codigo: "P018", documento: "2018901234", nombre: "Sebastián Gil", email: "sgil@universidad.edu.co", especialidades: ["Álgebra"], materias: ["MAT201"] },
+  { codigo: "P019", documento: "2019012345", nombre: "Juliana Acosta", email: "jacosta@universidad.edu.co", especialidades: ["Bases de Datos"], materias: ["PROG301"] },
+  { codigo: "P020", documento: "2020123456", nombre: "Tomás Salazar", email: "tsalazar@universidad.edu.co", especialidades: ["Cálculo"], materias: ["MAT301"] }
 ]);
 
 // Insertar estudiantes
