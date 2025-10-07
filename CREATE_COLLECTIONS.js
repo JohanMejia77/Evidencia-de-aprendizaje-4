@@ -38,7 +38,7 @@ db.createCollection("estudiantes", {
             description: "ID del programa académico - requerido"
           },
           semestre_actual: {
-            bsonType: "int",
+            bsonType: "number",
             minimum: 1,
             maximum: 12
           },
