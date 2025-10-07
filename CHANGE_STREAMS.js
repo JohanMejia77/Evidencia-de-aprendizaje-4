@@ -1,27 +1,41 @@
 // Change Streams para el sistema académico
+// Propósito: Monitorear y reaccionar a cambios en las colecciones clave del dominio académico
+// Colecciones cubiertas: estudiantes, inscripciones
+// Requisitos de negocio implementados:
+// - Auditoría de cambios (trazabilidad)
+// - Notificación de riesgo académico (promedio < 3.0)
+// - Validación de cupos máximos por materia (cupo 30 por defecto)
+// - Historial de cambios en calificaciones
+// Utilización: llamar a iniciarTodosLosStreams() para iniciar, y detenerTodosLosStreams(streams) para detener
 
 // 1. Auditoría de cambios en estudiantes
+// Escucha: cualquier operación (insert, update, delete) sobre estudiantes
+// Acción: registra en la colección 'auditoria' los datos antes y después del cambio
+// Nota: requiere Change Streams con 'fullDocumentBeforeChange' habilitado en cluster y permisos adecuados
 function iniciarAuditoriaEstudiantes() {
     const changeStream = db.estudiantes.watch();
     
     changeStream.on('change', (change) => {
         const auditoria = {
             coleccion: 'estudiantes',
-            operacion: change.operationType,
+            operacion: change.operationType, // insert | update | delete | replace | invalidate
             documento_id: change.documentKey._id,
             timestamp: new Date(),
             datos_anteriores: change.fullDocumentBeforeChange,
-            datos_nuevos: change.fullDocument
+            datos_nuevos: change.fullDocument // documento posterior a la operación (para insert/update/replace)
         };
         
         db.auditoria.insertOne(auditoria);
         print(`Auditoría: ${change.operationType} en estudiante ${change.documentKey._id}`);
     });
     
-    return changeStream;
+    return changeStream; // permitir cierre posterior
 }
 
 // 2. Notificación de riesgo académico
+// Escucha: actualizaciones donde cambie 'promedio_acumulado'
+// Acción: si el nuevo promedio < 3.0, registra alerta en 'notificaciones'
+// Lógica de negocio: dispara alerta solo al caer por debajo del umbral
 function iniciarNotificacionRiesgo() {
     const changeStream = db.estudiantes.watch([
         { $match: { 'updateDescription.updatedFields.promedio_acumulado': { $exists: true } } }
@@ -48,6 +62,9 @@ function iniciarNotificacionRiesgo() {
 }
 
 // 3. Control de cupos por materia
+// Escucha: inserciones en 'inscripciones'
+// Acción: si el cupo activo excede el máximo (30), revierte la inscripción y registra el evento en 'errores_cupos'
+// Lógica de negocio: asegura integridad operativa de cupos por materia
 function iniciarControlCupos() {
     const changeStream = db.inscripciones.watch([
         { $match: { operationType: 'insert' } }
@@ -55,7 +72,7 @@ function iniciarControlCupos() {
     
     changeStream.on('change', (change) => {
         const inscripcion = change.fullDocument;
-        const materiaId = inscripcion.materia;
+        const materiaId = inscripcion.materia; // aquí se espera el identificador referenciado en inscripciones
         
         // Contar estudiantes activos en la materia
         const cupoActual = db.inscripciones.countDocuments({
@@ -63,10 +80,11 @@ function iniciarControlCupos() {
             estado: 'activa'
         });
         
+        // Cupo máximo (se puede parametrizar por materia en el futuro)
         const cupoMaximo = 30;
         
         if (cupoActual > cupoMaximo) {
-            // Revertir la inscripción
+            // Revertir la inscripción (compensación inmediata)
             db.inscripciones.deleteOne({ _id: inscripcion._id });
             
             const error = {
@@ -86,6 +104,9 @@ function iniciarControlCupos() {
 }
 
 // 4. Historial de cambios en calificaciones
+// Escucha: actualizaciones donde cambie 'nota' en inscripciones
+// Acción: registra nota anterior y nueva en 'historial_calificaciones'
+// Lógica de negocio: traza la evolución de las calificaciones por inscripción
 function iniciarHistorialCalificaciones() {
     const changeStream = db.inscripciones.watch([
         { $match: { 'updateDescription.updatedFields.nota': { $exists: true } } }
@@ -113,6 +134,7 @@ function iniciarHistorialCalificaciones() {
 }
 
 // Función para iniciar todos los change streams
+// Devuelve un objeto con los streams activos para permitir su cierre posterior
 function iniciarTodosLosStreams() {
     const streams = {
         auditoria: iniciarAuditoriaEstudiantes(),
@@ -126,6 +148,7 @@ function iniciarTodosLosStreams() {
 }
 
 // Función para detener todos los streams
+// Recorre y cierra cada stream activo de forma segura
 function detenerTodosLosStreams(streams) {
     Object.values(streams).forEach(stream => {
         if (stream) {

@@ -1,4 +1,15 @@
+// Datos de ejemplo del sistema académico
+// Propósito: poblar las colecciones con datos realistas, variados y coherentes
+// Notas:
+// - Las referencias entre colecciones se hacen por códigos (strings) para facilitar lectura y carga
+// - Los programas incluyen 'plan_estudio' con códigos de materias
+// - Las materias referencian profesores por su código
+// - Los estudiantes referencian programas por código y traen documento/estado/fecha_nacimiento
+// - Las inscripciones referencian estudiantes y materias por código, con período/estado/fecha
+
 // Insertar programas académicos
+// Incluye 20 programas con diversidad de áreas, requisitos y plan de estudio por códigos de materias
+
 db.programas.insertMany([
   { codigo: "ING-SIS", nombre: "Ingeniería de Sistemas", descripcion: "Formación en desarrollo de software y sistemas informáticos.", requisitos: ["Prueba Saber 11", "Entrevista"], plan_estudio: ["MAT101", "PROG101", "MAT201", "PROG201", "MAT301", "PROG301", "PROG401"] },
   { codigo: "ADM-EMP", nombre: "Administración de Empresas", descripcion: "Gestión y dirección de organizaciones empresariales.", requisitos: ["Prueba Saber 11"], plan_estudio: ["ADM101", "ADM201", "ADM301", "MAT101", "MAT401"] },
@@ -23,6 +34,8 @@ db.programas.insertMany([
 ]);
 
 // Insertar materias
+// 20 materias con créditos validados, profesor por código y prerrequisitos como códigos de materias
+
 db.materias.insertMany([
   { codigo: "MAT101", nombre: "Matemáticas Básicas", información: "Fundamentos de matemáticas.", profesor: "P001", creditos: 3, prerrequisitos: [] },
   { codigo: "PROG101", nombre: "Introducción a la Programación", información: "Lógica y fundamentos de programación.", profesor: "P002", creditos: 4, prerrequisitos: [] },
@@ -47,6 +60,8 @@ db.materias.insertMany([
 ]);
 
 // Insertar profesores
+// 20 profesores con documento, especialidades y asignación de materias por códigos
+
 db.profesores.insertMany([
   { codigo: "P001", documento: "2001234567", nombre: "María Gómez", email: "mgomez@universidad.edu.co", especialidades: ["Matemáticas"], materias: ["MAT101", "MAT201", "MAT301"] },
   { codigo: "P002", documento: "2002345678", nombre: "Carlos Pérez", email: "cperez@universidad.edu.co", especialidades: ["Programación"], materias: ["PROG101", "PROG201", "PROG301", "PROG401"] },
@@ -71,6 +86,8 @@ db.profesores.insertMany([
 ]);
 
 // Insertar estudiantes
+// 20 estudiantes con documentos únicos, estados variados y fechas de nacimiento realistas
+
 db.estudiantes.insertMany([
   { codigo: "E001", documento: "1002345678", nombre: "Juan Pérez", email: "jperez@universidad.edu.co", programa: "ING-SIS", semestre_actual: 1, promedio_acumulado: 4.2, estado: "Activo", fecha_nacimiento: new Date("2005-03-15") },
   { codigo: "E002", documento: "1003456789", nombre: "Laura Gómez", email: "lgomez@universidad.edu.co", programa: "ADM-EMP", semestre_actual: 2, promedio_acumulado: 3.8, estado: "Activo", fecha_nacimiento: new Date("2004-07-22") },
@@ -95,6 +112,9 @@ db.estudiantes.insertMany([
 ]);
 
 // Insertar inscripciones
+// 40 inscripciones con combinación de estados, periodos y fechas válidas (no futuras)
+
+
 db.inscripciones.insertMany([
   { estudiante: "E001", materia: "MAT101", periodo: "2025-1", fecha_inscripcion: new Date("2025-01-10"), estado: "aprobada" },
   { estudiante: "E001", materia: "PROG101", periodo: "2025-1", fecha_inscripcion: new Date("2025-01-10"), estado: "aprobada" },

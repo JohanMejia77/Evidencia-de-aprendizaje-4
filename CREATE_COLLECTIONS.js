@@ -1,4 +1,18 @@
+// Definiciones de colecciones y validaciones del sistema académico
+// Objetivo: crear colecciones con validaciones robustas ($jsonSchema) y reglas de negocio básicas
+// Notas:
+// - Se emplean patrones y enums para asegurar formatos válidos
+// - Algunas reglas temporales usan $expr (ej.: fechas no futuras)
+// - IDs referenciales se manejan como strings (códigos) para simplificar el CRUD y los inserts de ejemplo
+
 // Crear colección estudiantes
+
+// Propósito: almacenar datos personales, estado académico y métricas clave del estudiante
+// Reglas destacadas:
+// - 'documento' con patrón de cédula colombiana (6 a 10 dígitos)
+// - 'estado' validado por enum (Activo, Inactivo, Graduado, Retirado)
+// - 'fecha_nacimiento' tipo date y validada como fecha pasada mediante $expr
+// - 'promedio_acumulado' entre 0.0 y 5.0
 
 db.createCollection("estudiantes", {
     validator: {
@@ -55,6 +69,12 @@ db.createCollection("estudiantes", {
 
 // Crear colección profesores
 
+// Propósito: registrar docentes, sus especialidades y materias asignadas
+// Reglas destacadas:
+// - 'documento' con patrón de cédula colombiana
+// - 'email' validado con patrón
+// - 'materias' como arreglo de códigos de materias
+
 db.createCollection("profesores", {
     validator: {
         $jsonSchema: {
@@ -100,6 +120,12 @@ db.createCollection("profesores", {
 
 // Crear colección materias
 
+// Propósito: definir oferta académica (asignaturas), su información y relaciones
+// Reglas destacadas:
+// - 'creditos' entero entre 1 y 10
+// - 'profesor' como código de profesor
+// - 'prerrequisitos' como arreglo de códigos de materias
+
 db.createCollection("materias", {
     validator: {
         $jsonSchema: {
@@ -142,6 +168,11 @@ db.createCollection("materias", {
 
 // Crear colección programas
 
+// Propósito: definir programas académicos y sus planes de estudio
+// Reglas destacadas:
+// - 'plan_estudio' lista de códigos de materias
+// - 'requisitos' lista libre de condiciones de ingreso/graduación
+
 db.createCollection("programas", {
     validator: {
         $jsonSchema: {
@@ -180,6 +211,12 @@ db.createCollection("programas", {
 })
 
 // Crear colección inscripciones
+
+// Propósito: registrar la relación estudiante-materia por período y su estado
+// Reglas destacadas:
+// - 'fecha_inscripcion' no puede ser futura (validación con $expr)
+// - 'estado' validado por enum (activa, retirada, aprobada, finalizada)
+// - 'nota' entre 0.0 y 5.0 (opcional)
 
 db.createCollection("inscripciones", {
     validator: {

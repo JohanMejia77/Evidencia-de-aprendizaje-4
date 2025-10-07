@@ -1,6 +1,27 @@
 // Transacciones para operaciones críticas del sistema académico
+// Objetivo: garantizar consistencia e integridad de datos en procesos sensibles mediante transacciones
+// Reglas generales:
+// - Se crea una sesión por operación y se inicia una transacción
+// - Se valida existencia de entidades y reglas de negocio antes de escribir
+// - En cualquier error, se realiza abortTransaction y se retorna el mensaje
+// - En éxito, se hace commitTransaction
+// Notas:
+// - Las referencias entre colecciones usan códigos (strings) según el modelo implementado
+// - Estas funciones asumen un clúster/replica set que soporta transacciones
 
 // 1. Inscripción de estudiante en múltiples materias
+// Propósito: inscribir atómicamente a un estudiante en varias materias en un período dado
+// Parámetros:
+// - estudianteCodigo: código del estudiante (string)
+// - materiasCodigos: arreglo de códigos de materias (string[])
+// - periodo: período académico (string)
+// Validaciones:
+// - Estudiante existente
+// - Todas las materias existen
+// - No existe inscripción duplicada (misma materia y período)
+// Efectos:
+// - Inserta inscripciones con estado "activa" y fecha actual
+// Retorno: { success } o { error }
 function inscribirEstudianteMultiplesMaterias(estudianteCodigo, materiasCodigos, periodo) {
     const session = db.getMongo().startSession();
     
@@ -63,6 +84,17 @@ function inscribirEstudianteMultiplesMaterias(estudianteCodigo, materiasCodigos,
 }
 
 // 2. Registro de calificaciones y actualización de promedio
+// Propósito: registrar notas por materia/período y recalcular el promedio acumulado del estudiante
+// Parámetros:
+// - estudianteCodigo: código del estudiante (string)
+// - calificaciones: arreglo de objetos { materiaCodigo, nota, periodo }
+// Validaciones:
+// - Estudiante y materia existen
+// - Inscripción existente para esa materia/período
+// Efectos:
+// - Actualiza inscripciones (nota y estado aprobada/reprobada)
+// - Recalcula y persiste el promedio_acumulado
+// Retorno: { success } o { error }
 function registrarCalificaciones(estudianteCodigo, calificaciones) {
     const session = db.getMongo().startSession();
     
@@ -141,6 +173,18 @@ function registrarCalificaciones(estudianteCodigo, calificaciones) {
 }
 
 // 3. Retiro de materia con actualización de créditos
+// Propósito: cambiar una inscripción activa a "retirada" y recalcular promedio sin contarla
+// Parámetros:
+// - estudianteCodigo: código del estudiante (string)
+// - materiaCodigo: código de la materia (string)
+// - periodo: período académico (string)
+// Validaciones:
+// - Estudiante y materia existen
+// - Inscripción activa existente
+// Efectos:
+// - Actualiza estado de inscripción a "retirada"
+// - Recalcula promedio_acumulado excluyendo retiradas
+// Retorno: { success } o { error }
 function retirarMateria(estudianteCodigo, materiaCodigo, periodo) {
     const session = db.getMongo().startSession();
     
@@ -216,6 +260,17 @@ function retirarMateria(estudianteCodigo, materiaCodigo, periodo) {
 }
 
 // 4. Graduación de estudiante (cambio de estado y actualización de registros)
+// Propósito: graduar a un estudiante si cumple plan de estudio y promedio mínimo
+// Parámetros:
+// - estudianteCodigo: código del estudiante (string)
+// Validaciones:
+// - Estudiante activo
+// - Programa existente y plan_estudio completo aprobado
+// - Promedio mínimo 3.0
+// Efectos:
+// - Actualiza estado a "Graduado"
+// - Finaliza inscripciones activas a "finalizada"
+// Retorno: { success } o { error }
 function graduarEstudiante(estudianteCodigo) {
     const session = db.getMongo().startSession();
     
